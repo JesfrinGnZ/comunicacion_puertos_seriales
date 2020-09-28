@@ -8,6 +8,8 @@
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h> // write(), read(), close()
 
+char mensaje[10];
+int opcionMenu=1;
 int main() {
   // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
   int serial_port = open("/dev/tty1", O_RDWR);
@@ -54,9 +56,18 @@ int main() {
       return 1;
   }
 
-  // Write to serial port
+ 
+  //Escribiendo en el pueto serial las veces que querramos??
+    
+    while(opcionMenu==1){
+        switch (opcionMenu)
+        {
+        case 1:
+            printf("PEDRO_TTY1->:");
+            scanf("%s", mensaje);
+
   unsigned char msg[] = { 'E', 'S', 'T', 'E', 'E','S','U','N','\r' };
-  write(serial_port, "MSG_TTY1", sizeof(msg));
+  write(serial_port, mensaje, sizeof(mensaje));
   //printf("%s","Hola JAJAJ");
   // Allocate memory for read buffer, set size according to your needs
   char read_buf [256];
@@ -79,7 +90,17 @@ int main() {
 
   // Here we assume we received ASCII data, but you might be sending raw bytes (in that case, don't try and
   // print it to the screen like this!)
-  printf("Read %i bytes. Received message: %s\n", num_bytes, read_buf);
+  printf("LUIS_TTY0->: %s\n", read_buf);
+
+
+            break;
+        
+        default:
+        opcionMenu=0;
+            break;
+        }
+    }
+
 
   close(serial_port);
   return 0; // success
