@@ -48,6 +48,15 @@ int main(int argc, char *argv[])
         termAttr.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
         termAttr.c_iflag &= ~(IXON | IXOFF | IXANY);
         termAttr.c_oflag &= ~OPOST;
+        //PARA ENVIAR MENSAJES
+        termAttr.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+        termAttr.c_lflag &= ~ECHOE; // Disable erasure
+        termAttr.c_lflag &= ~ECHONL; // Disable new-line echo
+        termAttr.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
+        termAttr.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+        termAttr.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+        
+
         tcsetattr(fd,TCSANOW,&termAttr);
         printf("UART1 configured....\n");
 
@@ -62,12 +71,13 @@ int main(int argc, char *argv[])
 
 void signal_handler_IO (int status)
 {
-char read_buf [256];       
-memset(&read_buf, '\0', sizeof(read_buf));
-int num_bytes = read(fd, &read_buf, sizeof(read_buf));
-if (num_bytes < 0) {
+    char read_buf [256];       
+    memset(&read_buf, '\0', sizeof(read_buf));
+    int num_bytes = read(fd, &read_buf, sizeof(read_buf));
+    if (num_bytes < 0) {
       printf("Error reading: %s", strerror(errno));
-  }
-printf("LUIS_TTY0->: %s\n", read_buf);
-printf("received data from UART.\n");
+    }
+    printf("LUIS_TTY0->: %s\n", read_buf);
+
+    //    printf("received data from UART.\n");
 }

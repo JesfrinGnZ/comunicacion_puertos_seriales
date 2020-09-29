@@ -1,5 +1,6 @@
 // C library headers
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Linux headers
@@ -7,6 +8,12 @@
 #include <errno.h> // Error integer and strerror() function
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h> // write(), read(), close()
+//Senales
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
+#include <sys/signal.h>
 
 char mensaje[10];
 int opcionMenu=1;
