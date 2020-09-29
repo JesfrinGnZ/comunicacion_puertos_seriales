@@ -17,6 +17,8 @@ int fd;
 int connected;
 struct termios termAttr;
 struct sigaction saio;
+char mensaje[10];
+
 
 int main(int argc, char *argv[])
 {
@@ -56,13 +58,27 @@ int main(int argc, char *argv[])
         termAttr.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
         termAttr.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
         
-
         tcsetattr(fd,TCSANOW,&termAttr);
-        printf("UART1 configured....\n");
+        printf("UART1 CONFIGURANDO CHAT....\n");
+
+        termAttr.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+        termAttr.c_cc[VMIN] = 0;
+
+        // Set in/out baud rate to be 9600(Configuracion de que se pueda escribir un mensaje)
+        cfsetispeed(&termAttr, B9600);
+        cfsetospeed(&termAttr, B9600);
+          // Save tty settings, also checking for error
+        if (tcsetattr(fd, TCSANOW, &termAttr) != 0) {
+          printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+        return 1;
+        }
 
         connected = 1;
         while(connected == 1){
               // some code
+            printf("LUIS_TTY0->:");
+            scanf("%s", mensaje);
+            write(fd, mensaje, sizeof(mensaje));
         }
 
         close(fd);
@@ -77,7 +93,7 @@ void signal_handler_IO (int status)
     if (num_bytes < 0) {
       printf("Error reading: %s", strerror(errno));
     }
-    printf("LUIS_TTY0->: %s\n", read_buf);
+    printf("PEDRO_TTY1->: %s\n", read_buf);
 
     //    printf("received data from UART.\n");
 }
