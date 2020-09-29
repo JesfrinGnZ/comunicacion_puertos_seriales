@@ -22,7 +22,7 @@ char mensaje[10];
 
 int main(int argc, char *argv[])
 {
-        fd = open("/dev/tty0", O_RDWR | O_NOCTTY | O_NDELAY);
+        fd = open("/dev/tty1", O_RDWR | O_NOCTTY | O_NDELAY);
         if (fd == -1)
         {
            perror("open_port: Unable to open /dev/ttyO1\n");
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         termAttr.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
         
         tcsetattr(fd,TCSANOW,&termAttr);
-        printf("UART1 CONFIGURANDO CHAT....\n");
+        printf("UART1 PEDRO CONFIGURANDO TU CHAT....\n");
 
         termAttr.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
         termAttr.c_cc[VMIN] = 0;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
         connected = 1;
         while(connected == 1){
               // some code
-            printf("LUIS_TTY0->:");
+            printf("PEDRO_TTY0->:");
             scanf("%s", mensaje);
             write(fd, mensaje, sizeof(mensaje));
         }
@@ -93,7 +93,7 @@ void signal_handler_IO (int status)
     if (num_bytes < 0) {
       printf("Error reading: %s", strerror(errno));
     }
-    printf("PEDRO_TTY1->: %s\n", read_buf);
+    printf("LUIS_TTY1->: %s\n", read_buf);
 
     //    printf("received data from UART.\n");
 }
